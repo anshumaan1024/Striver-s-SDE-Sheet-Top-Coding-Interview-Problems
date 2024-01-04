@@ -1,0 +1,63 @@
+// @gfg : Kth largest element in BST
+//
+//---------------------------------------------------------------------------------------METHOD-1--------------------------------------------------------------------------------------------
+// using morris traversal + inorder  , to find (N-K+1)th smallest node
+
+
+//--------------------------------------------------------------------------------------METHOD -2 -------------------------------------------------------------------------------------------
+// using morris traversal + reverse inorder
+
+class Solution
+{
+    public:
+    int kthLargest(Node *root, int K)
+    {
+        int ans = -1;
+        int count = 0 ;
+        Node* curr = root;
+        while(curr!=NULL){
+            
+            if(curr->right!=NULL){
+                
+                // going to leftmost node on right subtree
+                Node* temp = curr->right;
+                while(temp->left!=NULL && temp->left!=curr){
+                    temp = temp->left;
+                }
+                
+                // making threads
+                if(temp->left==NULL){
+                    temp->left = curr;
+                    curr = curr->right;
+                }
+                
+                // breaking threads, going left
+                else{
+                    temp->left = NULL;
+                        
+                    count++;
+                    if(count==K)
+                        ans = curr->data;
+                    
+                    curr = curr->left;
+                    
+                }
+                
+            }
+            
+            else{
+                
+                count++;
+                if(count==K)
+                    ans = curr->data;
+                
+                curr = curr->left;
+            }
+        }
+        
+        return ans;
+        
+    }
+};
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
