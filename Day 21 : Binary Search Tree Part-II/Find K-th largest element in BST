@@ -3,6 +3,75 @@
 //---------------------------------------------------------------------------------------METHOD-1--------------------------------------------------------------------------------------------
 // using morris traversal + inorder  , to find (N-K+1)th smallest node
 
+class Solution
+{
+    public:
+    void countAllNodes(Node* root, int &cnt){
+        
+        if(root==NULL)          return;
+        
+        countAllNodes(root->left,cnt);
+        cnt++;
+        countAllNodes(root->right,cnt);
+        
+    }
+    
+    public:
+    int kthLargest(Node *root, int K)
+    {
+        int cnt = 0;
+        countAllNodes(root,cnt);
+        int N = cnt; 
+        
+        K = N-K+1;
+        
+        int ans = -1;
+        int count = 0 ;
+        Node* curr = root;
+        while(curr!=NULL){
+            
+            if(curr->left!=NULL){
+                
+                // going to rightmost node on left subtree
+                Node* temp = curr->left;
+                while(temp->right!=NULL && temp->right!=curr){
+                    temp = temp->right;
+                }
+                
+                // making threads
+                if(temp->right==NULL){
+                    temp->right = curr;
+                    curr = curr->left;
+                }
+                
+                // breaking threads, going right
+                else{
+                    temp->right = NULL;
+                        
+                    count++;
+                    if(count==K)
+                        ans = curr->data;
+                    
+                    curr = curr->right;
+                    
+                }
+                
+            }
+            
+            else{
+                
+                count++;
+                if(count==K)
+                    ans = curr->data;
+                
+                curr = curr->right;
+            }
+        }
+        
+        return ans;
+        
+    }
+};
 
 //--------------------------------------------------------------------------------------METHOD -2 -------------------------------------------------------------------------------------------
 // using morris traversal + reverse inorder
